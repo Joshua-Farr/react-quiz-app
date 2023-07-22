@@ -1,20 +1,25 @@
 import React from "react";
+import "./QuizQuestion.css"
 
-
-export default function QuizQuestion(props){
+export default function QuizQuestion({question, answers}){
 
 
     return(
-        <container className="question-container">
-            <h4>How would one say goodbye in Spanish?</h4>
-            <h4>pizza </h4>
+        <div className="question-container">
+            <h4 className="question">{question}</h4>
             <div className="answers-list">
-                <span className="answer">Adiós</span>
-                <span className="answer">Hola</span>
-                <span className="answer">Au Revoir</span>
-                <span className="answer">Salir</span>
+                <span className="answer">{answers[0]}</span>
+                <span className="answer">{answers[1]}</span>
+                <span className="answer">{answers[2]}Revoir</span>
+                <span className="answer">{answers[3]}</span>
             </div>
-        </container>
+        </div>
 
     )
+
+
+
+    QuizQuestion.defaultProps = {
+        answers: ["test","test","test","test","test"]
+      }
 }

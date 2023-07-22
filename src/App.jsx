@@ -18,10 +18,9 @@ export default function App() {
   }
 
   return(
-  <main>
-    {welcomeScreen ? <MainScreen startQuiz={startQuiz}/> :  <Quiz />}
-
-
-  </main>)
+    <main>
+      {welcomeScreen ? <MainScreen startQuiz={startQuiz}/> :  <Quiz />}
+    </main>
+    )
 }
 
