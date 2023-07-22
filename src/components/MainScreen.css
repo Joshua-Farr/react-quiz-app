@@ -1,0 +1,27 @@
+button{
+    color: white;
+    border-radius: 15px;
+    background: hsla(230, 34%, 46%, 1);
+    border: none;
+    cursor: pointer;
+    padding: .5em 2.5em;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+}
+
+button:hover{
+    opacity: 85%;
+}
+
+h1{
+    font-family: 'Karla', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+}
+
+p{
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
