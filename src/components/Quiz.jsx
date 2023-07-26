@@ -14,46 +14,62 @@ export default function Quiz() {
       .then((res) => res.json())
       .then((data) => {
         setQuestions(data.results);
-        console.log(data.results);
+        // console.log(data.results);
         getTheQuestions();
-        console.log("use effect questions:", questions);
+        getFormattedQuestions();
       });
   }, []);
+
+  React.useEffect(() => {
+    console.log("Updated Questions: ", questions);
+  }, [questions]);
 
   //Formatting returned data from API in to obj. array
   function getTheQuestions() {
     setQuestions((questionsList) =>
       questionsList.map((question) => {
         return {
-          id: nanoid(),
           question: decode(question.question),
           answers: [
             {
-              answer: question.correct_answer,
+              answer: decode(question.correct_answer),
               isTrue: true,
-              isSelected: false,
+              isSelected: true,
             },
             {
-              answer: question.incorrect_answers[0],
+              answer: decode(question.incorrect_answers[0]),
               isTrue: false,
               isSelected: false,
             },
             {
-              answer: question.incorrect_answers[1],
+              answer: decode(question?.incorrect_answers[1]),
               isTrue: false,
               isSelected: false,
             },
             {
-              answer: question.incorrect_answers[2],
+              answer: decode(question?.incorrect_answers[2]),
               isTrue: false,
               isSelected: false,
             },
           ],
+          id: nanoid(),
         };
       })
     );
+  }
 
-    console.log(questions);
+  function getFormattedQuestions() {
+    setQuestions((oldQuestions) =>
+      oldQuestions.map((question) => {
+        return (
+          <QuizQuestion
+            question={question.question}
+            answers={question.answers}
+            key={question.id}
+          />
+        );
+      })
+    );
   }
 
   //Building the quiz
@@ -61,7 +77,15 @@ export default function Quiz() {
     <div>
       {questions.length > 1 ? (
         <>
-          <QuizQuestion question={questions} />
+          {/* {questions.map((question) => {
+            return (
+              <QuizQuestion
+                question={question.question}
+                answers={question.answers}
+                key={question.id}
+              />
+            );
+          })} */}
 
           {gameState ? (
             <button
@@ -75,6 +99,7 @@ export default function Quiz() {
             <button
               onClick={() => {
                 setGameState((oldState) => !oldState);
+                setUserScore(0);
               }}
             >
               Start New Game
