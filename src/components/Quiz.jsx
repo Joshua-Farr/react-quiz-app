@@ -20,6 +20,7 @@ export default function Quiz() {
       });
   }, []);
 
+  //Using to see what questions looks like after re-renders
   React.useEffect(() => {
     console.log("Updated Questions: ", questions);
   }, [questions]);
@@ -30,32 +31,56 @@ export default function Quiz() {
       questionsList.map((question) => {
         return {
           question: decode(question.question),
+          id: nanoid(),
           answers: [
             {
               answer: decode(question.correct_answer),
               isTrue: true,
               isSelected: true,
+              id: nanoid(),
             },
             {
               answer: decode(question.incorrect_answers[0]),
               isTrue: false,
               isSelected: false,
+              id: nanoid(),
             },
             {
               answer: decode(question?.incorrect_answers[1]),
               isTrue: false,
               isSelected: false,
+              id: nanoid(),
             },
             {
               answer: decode(question?.incorrect_answers[2]),
               isTrue: false,
               isSelected: false,
+              id: nanoid(),
             },
           ],
-          id: nanoid(),
         };
       })
     );
+  }
+
+  function selectAnswer(questionId, answerId) {
+    // setQuestions((oldQuestions) =>
+    //   oldQuestions.map((question) => {
+    //     if (question.id === questionId) {
+    //       question.map((answers) => {
+    //         if (answers.id === answerId) {
+    //           return { ...answers, isSelected: true };
+    //         } else {
+    //           return { ...answers, isSelected: false };
+    //         }
+    //       });
+    //     } else {
+    //       return { ...question };
+    //     }
+    //   })
+    // );
+    console.log("Question Id is:", questionId);
+    console.log("answer Id is:", answerId);
   }
 
   function getFormattedQuestions() {
@@ -65,6 +90,8 @@ export default function Quiz() {
           <QuizQuestion
             question={question.question}
             answers={question.answers}
+            selectAnswer={selectAnswer}
+            id={question.id}
             key={question.id}
           />
         );
