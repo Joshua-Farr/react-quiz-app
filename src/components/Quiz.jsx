@@ -16,7 +16,7 @@ export default function Quiz() {
         setQuestions(data.results);
         // console.log(data.results);
         getTheQuestions();
-        getFormattedQuestions();
+        // getFormattedQuestions();
       });
   }, []);
 
@@ -77,15 +77,17 @@ export default function Quiz() {
     <div>
       {questions.length > 1 ? (
         <>
-          {/* {questions.map((question) => {
+          {questions.map((theQuestion) => {
+            console.log(theQuestion.question);
             return (
               <QuizQuestion
-                question={question.question}
-                answers={question.answers}
-                key={question.id}
+                question={theQuestion.question}
+                answers={theQuestion.answers}
+                key={theQuestion.id}
+                id={theQuestion.id}
               />
             );
-          })} */}
+          })}
 
           {gameState ? (
             <button
