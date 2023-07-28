@@ -6,13 +6,13 @@ export default function QuizQuestion({ question, answers, id, selectAnswer }) {
   //   backgroundColor: isSelected ? "hsla(230, 61%, 90%, 1)" : "white",
   // };
 
-  if (question !== undefined) {
-    console.log("prop was passed");
-  } else {
-    console.log("prop was NOT passed");
-  }
+  // if (question !== undefined) {
+  //   console.log("prop was passed");
+  // } else {
+  //   console.log("prop was NOT passed");
+  // }
 
-  console.log(typeof answers[1].id);
+  // console.log("This is how many answers: ", answers.length);
 
   return (
     <div className="question-container">

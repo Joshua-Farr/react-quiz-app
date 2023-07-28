@@ -13,8 +13,8 @@ export default function Quiz() {
     fetch("https://opentdb.com/api.php?amount=5&difficulty=medium")
       .then((res) => res.json())
       .then((data) => {
-        setQuestions(data.results);
-        // console.log(data.results);
+        isSelected: false, setQuestions(data.results);
+        console.log(data.results);
         getTheQuestions();
         // getFormattedQuestions();
       });
@@ -32,11 +32,12 @@ export default function Quiz() {
         return {
           question: decode(question.question),
           id: nanoid(),
+          type: question.type,
           answers: [
             {
               answer: decode(question.correct_answer),
               isTrue: true,
-              isSelected: true,
+              isSelected: false,
               id: nanoid(),
             },
             {
@@ -45,6 +46,7 @@ export default function Quiz() {
               isSelected: false,
               id: nanoid(),
             },
+
             {
               answer: decode(question?.incorrect_answers[1]),
               isTrue: false,
@@ -64,52 +66,43 @@ export default function Quiz() {
   }
 
   function selectAnswer(questionId, answerId) {
-    // setQuestions((oldQuestions) =>
-    //   oldQuestions.map((question) => {
-    //     if (question.id === questionId) {
-    //       question.map((answers) => {
-    //         if (answers.id === answerId) {
-    //           return { ...answers, isSelected: true };
-    //         } else {
-    //           return { ...answers, isSelected: false };
-    //         }
-    //       });
-    //     } else {
-    //       return { ...question };
-    //     }
-    //   })
-    // );
+    setQuestions((oldQuestions) => {
+      return oldQuestions.map((question) => {
+        if (question.id === questionId) {
+          const answers = question.answers.map((answer) => {
+            if (answer.id === answerId) {
+              console.log("Matching answer: ", answer, " located!");
+              console.log("New answer: ", { ...answer, isSelected: true });
+              return { ...answer, isSelected: true };
+            } else {
+              return { ...answer, isSelected: false };
+            }
+          });
+          console.log("Updated question obj: ", answers);
+          return { ...question, answers };
+        } else {
+          return { ...question };
+        }
+      });
+    });
     console.log("Question Id is:", questionId);
     console.log("answer Id is:", answerId);
-  }
-
-  function getFormattedQuestions() {
-    setQuestions((oldQuestions) =>
-      oldQuestions.map((question) => {
-        return (
-          <QuizQuestion
-            question={question.question}
-            answers={question.answers}
-            selectAnswer={selectAnswer}
-            id={question.id}
-            key={question.id}
-          />
-        );
-      })
-    );
   }
 
   //Building the quiz
   return (
     <div>
+      {console.log("here is the questions array: ", questions)}
       {questions.length > 1 ? (
         <>
           {questions.map((theQuestion) => {
-            console.log(theQuestion.question);
+            // console.log("Accessing the question: ", theQuestion);
             return (
               <QuizQuestion
                 question={theQuestion.question}
                 answers={theQuestion.answers}
+                selectAnswer={selectAnswer}
+                type={theQuestion.type}
                 key={theQuestion.id}
                 id={theQuestion.id}
               />
