@@ -8,8 +8,7 @@ export default function Quiz() {
   const [userScore, setUserScore] = React.useState(0);
   const [questions, setQuestions] = React.useState({});
 
-  //Fetching data on load
-  React.useEffect(() => {
+  function startGame() {
     fetch("https://opentdb.com/api.php?amount=5&difficulty=medium")
       .then((res) => res.json())
       .then((data) => {
@@ -18,6 +17,11 @@ export default function Quiz() {
         getTheQuestions();
         // getFormattedQuestions();
       });
+  }
+
+  //Fetching data on load
+  React.useEffect(() => {
+    startGame();
   }, []);
 
   //Using to see what questions looks like after re-renders
@@ -65,34 +69,35 @@ export default function Quiz() {
     );
   }
 
+  //Logic for handling question selection and updating questions state
   function selectAnswer(questionId, answerId) {
     setQuestions((oldQuestions) => {
       return oldQuestions.map((question) => {
         if (question.id === questionId) {
           const answers = question.answers.map((answer) => {
             if (answer.id === answerId) {
-              console.log("Matching answer: ", answer, " located!");
-              console.log("New answer: ", { ...answer, isSelected: true });
+              // console.log("Matching answer: ", answer, " located!");
+              // console.log("New answer: ", { ...answer, isSelected: true });
               return { ...answer, isSelected: true };
             } else {
               return { ...answer, isSelected: false };
             }
           });
-          console.log("Updated question obj: ", answers);
+          // console.log("Updated question obj: ", answers);
           return { ...question, answers };
         } else {
           return { ...question };
         }
       });
     });
-    console.log("Question Id is:", questionId);
-    console.log("answer Id is:", answerId);
+    // console.log("Question Id is:", questionId);
+    // console.log("answer Id is:", answerId);
   }
 
   //Building the quiz
   return (
     <div>
-      {console.log("here is the questions array: ", questions)}
+      {/* {console.log("here is the questions array: ", questions)} */}
       {questions.length > 1 ? (
         <>
           {questions.map((theQuestion) => {
@@ -122,6 +127,7 @@ export default function Quiz() {
               onClick={() => {
                 setGameState((oldState) => !oldState);
                 setUserScore(0);
+                startGame();
               }}
             >
               Start New Game
