@@ -13,6 +13,7 @@ export default function Quiz() {
     fetch("https://opentdb.com/api.php?amount=5&difficulty=medium")
       .then((res) => res.json())
       .then((data) => {
+        console.log("Raw data: ", data);
         isSelected: false, setQuestions(data.results);
         getTheQuestions();
       });
@@ -55,14 +56,14 @@ export default function Quiz() {
             type: question.type,
             answers: [
               {
-                answer: decode(question.correct_answer),
-                isTrue: true,
+                answer: "True",
+                isTrue: question.correct_answer === "True" ? true : false,
                 isSelected: false,
                 id: nanoid(),
               },
               {
-                answer: decode(question.incorrect_answers[0]),
-                isTrue: false,
+                answer: "False",
+                isTrue: question.correct_answer === "False" ? true : false,
                 isSelected: false,
                 id: nanoid(),
               },
