@@ -21,9 +21,11 @@ export default function Quiz() {
   function shuffleQuestions() {
     setQuestions((oldQuestions) => {
       return oldQuestions.map((question) => {
+        console.log("Checking: ", question.answers);
         //Preventing shuffling of True/False questions
-        if (question.answers > 2) {
+        if (question.answers.length > 2) {
           const answers = question.answers.sort((a, b) => 0.5 - Math.random());
+          console.log("shuffling...", answers);
           return { ...question, answers };
         } else {
           return { ...question };
@@ -102,6 +104,7 @@ export default function Quiz() {
         }
       })
     );
+    console.log("Calling the shuffle");
     shuffleQuestions();
   }
 
