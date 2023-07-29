@@ -13,7 +13,6 @@ export default function Quiz() {
     fetch("https://opentdb.com/api.php?amount=5&difficulty=medium")
       .then((res) => res.json())
       .then((data) => {
-        console.log("Raw data: ", data);
         isSelected: false, setQuestions(data.results);
         getTheQuestions();
       });
@@ -22,11 +21,9 @@ export default function Quiz() {
   function shuffleQuestions() {
     setQuestions((oldQuestions) => {
       return oldQuestions.map((question) => {
-        console.log("Checking: ", question.answers);
         //Preventing shuffling of True/False questions
         if (question.answers.length > 2) {
           const answers = question.answers.sort((a, b) => 0.5 - Math.random());
-          console.log("shuffling...", answers);
           return { ...question, answers };
         } else {
           return { ...question };
@@ -39,11 +36,6 @@ export default function Quiz() {
   React.useEffect(() => {
     startGame();
   }, []);
-
-  //Using to see what questions looks like after re-renders
-  React.useEffect(() => {
-    console.log("Updated Questions: ", questions);
-  }, [questions]);
 
   //Formatting returned data from API in to obj. array
   function getTheQuestions() {
@@ -106,7 +98,6 @@ export default function Quiz() {
         }
       })
     );
-    console.log("Calling the shuffle");
     shuffleQuestions();
   }
 
