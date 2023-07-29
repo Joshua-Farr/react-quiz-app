@@ -1,0 +1,11 @@
+.player-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-score > h3 {
+  margin-right: 1em;
+  color: hsla(231, 42%, 28%, 1);
+  font-size: 1.35rem;
+}

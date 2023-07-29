@@ -2,6 +2,7 @@ import React from "react";
 import QuizQuestion from "./QuizQuestion";
 import { decode } from "html-entities";
 import { nanoid } from "nanoid";
+import "./Quiz.css";
 
 export default function Quiz() {
   const [gameState, setGameState] = React.useState(true);
@@ -13,13 +14,25 @@ export default function Quiz() {
       .then((res) => res.json())
       .then((data) => {
         isSelected: false, setQuestions(data.results);
-        console.log(data.results);
         getTheQuestions();
-        // getFormattedQuestions();
       });
   }
 
-  //Fetching data on load
+  function shuffleQuestions() {
+    setQuestions((oldQuestions) => {
+      return oldQuestions.map((question) => {
+        //Preventing shuffling of True/False questions
+        if (question.answers > 2) {
+          const answers = question.answers.sort((a, b) => 0.5 - Math.random());
+          return { ...question, answers };
+        } else {
+          return { ...question };
+        }
+      });
+    });
+  }
+
+  //Fetching data on initial load
   React.useEffect(() => {
     startGame();
   }, []);
@@ -33,40 +46,63 @@ export default function Quiz() {
   function getTheQuestions() {
     setQuestions((questionsList) =>
       questionsList.map((question) => {
-        return {
-          question: decode(question.question),
-          id: nanoid(),
-          type: question.type,
-          answers: [
-            {
-              answer: decode(question.correct_answer),
-              isTrue: true,
-              isSelected: false,
-              id: nanoid(),
-            },
-            {
-              answer: decode(question.incorrect_answers[0]),
-              isTrue: false,
-              isSelected: false,
-              id: nanoid(),
-            },
+        if (question.type === "boolean") {
+          return {
+            question: decode(question.question),
+            id: nanoid(),
+            type: question.type,
+            answers: [
+              {
+                answer: decode(question.correct_answer),
+                isTrue: true,
+                isSelected: false,
+                id: nanoid(),
+              },
+              {
+                answer: decode(question.incorrect_answers[0]),
+                isTrue: false,
+                isSelected: false,
+                id: nanoid(),
+              },
+            ],
+          };
+        } else {
+          return {
+            question: decode(question.question),
+            id: nanoid(),
+            type: question.type,
+            answers: [
+              {
+                answer: decode(question.correct_answer),
+                isTrue: true,
+                isSelected: false,
+                id: nanoid(),
+              },
+              {
+                answer: decode(question.incorrect_answers[0]),
+                isTrue: false,
+                isSelected: false,
+                id: nanoid(),
+              },
 
-            {
-              answer: decode(question?.incorrect_answers[1]),
-              isTrue: false,
-              isSelected: false,
-              id: nanoid(),
-            },
-            {
-              answer: decode(question?.incorrect_answers[2]),
-              isTrue: false,
-              isSelected: false,
-              id: nanoid(),
-            },
-          ],
-        };
+              {
+                answer: decode(question?.incorrect_answers[1]),
+                isTrue: false,
+                isSelected: false,
+                id: nanoid(),
+              },
+              {
+                answer: decode(question?.incorrect_answers[2]),
+                isTrue: false,
+                isSelected: false,
+                id: nanoid(),
+              },
+            ],
+          };
+        }
       })
     );
+    shuffleQuestions();
   }
 
   //Logic for handling question selection and updating questions state
@@ -76,32 +112,39 @@ export default function Quiz() {
         if (question.id === questionId) {
           const answers = question.answers.map((answer) => {
             if (answer.id === answerId) {
-              // console.log("Matching answer: ", answer, " located!");
-              // console.log("New answer: ", { ...answer, isSelected: true });
               return { ...answer, isSelected: true };
             } else {
               return { ...answer, isSelected: false };
             }
           });
-          // console.log("Updated question obj: ", answers);
           return { ...question, answers };
         } else {
           return { ...question };
         }
       });
     });
-    // console.log("Question Id is:", questionId);
-    // console.log("answer Id is:", answerId);
+  }
+
+  //Goes through all answers and checks to see if they are correct
+  function checkAnswers() {
+    for (let i = 0; i < questions.length; i++) {
+      for (let j = 0; j < questions[i]?.answers.length; i++) {
+        if (
+          questions[i].answers[j].isTrue &&
+          questions[i].answers[j].isSelected
+        ) {
+          setUserScore((oldScore) => (oldScore += 1));
+        }
+      }
+    }
   }
 
   //Building the quiz
   return (
     <div>
-      {/* {console.log("here is the questions array: ", questions)} */}
       {questions.length > 1 ? (
         <>
           {questions.map((theQuestion) => {
-            // console.log("Accessing the question: ", theQuestion);
             return (
               <QuizQuestion
                 question={theQuestion.question}
@@ -118,20 +161,24 @@ export default function Quiz() {
             <button
               onClick={() => {
                 setGameState((oldState) => !oldState);
+                checkAnswers();
               }}
             >
               Check Answers
             </button>
           ) : (
-            <button
-              onClick={() => {
-                setGameState((oldState) => !oldState);
-                setUserScore(0);
-                startGame();
-              }}
-            >
-              Start New Game
-            </button>
+            <div className="player-score">
+              <h3>You scored {userScore}/5 correct answers!</h3>
+              <button
+                onClick={() => {
+                  setGameState((oldState) => !oldState);
+                  setUserScore(0);
+                  startGame();
+                }}
+              >
+                Start New Game
+              </button>
+            </div>
           )}
         </>
       ) : (
