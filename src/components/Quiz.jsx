@@ -54,6 +54,7 @@ export default function Quiz() {
             question: decode(question.question),
             id: nanoid(),
             type: question.type,
+            //Allowing to reder in the correct order for True/False questions
             answers: [
               {
                 answer: "True",
@@ -155,6 +156,7 @@ export default function Quiz() {
                 answers={theQuestion.answers}
                 selectAnswer={selectAnswer}
                 type={theQuestion.type}
+                gameState={gameState}
                 key={theQuestion.id}
                 id={theQuestion.id}
               />
