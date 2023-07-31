@@ -9,6 +9,11 @@ export default function Quiz() {
   const [userScore, setUserScore] = React.useState(0);
   const [questions, setQuestions] = React.useState({});
 
+  //Fetching data on initial load
+  React.useEffect(() => {
+    startGame();
+  }, []);
+
   function startGame() {
     fetch("https://opentdb.com/api.php?amount=5&difficulty=medium")
       .then((res) => res.json())
@@ -31,11 +36,6 @@ export default function Quiz() {
       });
     });
   }
-
-  //Fetching data on initial load
-  React.useEffect(() => {
-    startGame();
-  }, []);
 
   //Formatting returned data from API in to obj. array
   function getTheQuestions() {
